@@ -1,25 +1,25 @@
 from setuptools import find_packages, setup
 
-import template
+import cbpreprocessing
 
-DISTNAME = "template"
+DISTNAME = "cbpreprocessing"
 
 MAINTAINER = "Citibeats"
 MAINTAINER_EMAIL = "administration@citibeats.com"
 
-DESCRIPTION = "<description>"
+DESCRIPTION = "A preprocessing library that given a text and its language returns the cleaned version of the text."
 with open('./README.md', 'r') as f:
     LONG_DESCRIPTION = f.read()
 
 URL = "https://www.citibeats.com/"
 
 PROJECT_URLS = {
-    "Bug Tracker": "<bug-tracker-url>",
-    "Documentation": "<documentation-url>",
-    "Source Code": "<source-code-url>",
+    "Bug Tracker": "https://github.com/thesocialcoin/ds-preprocessing/issues",
+    "Documentation": "https://github.com/thesocialcoin/ds-preprocessing/tree/main/src",
+    "Source Code": "https://github.com/thesocialcoin/ds-preprocessing/tree/main",
 }
 
-VERSION = template.__version__
+VERSION = cbpreprocessing.__version__
 
 with open("./requirements.txt") as f:
     REQUIREMENTS = f.read().splitlines()
@@ -31,7 +31,7 @@ CLASSIFIERS = [
     'Intended Audience :: <audience>',          # Define your audience
     'Topic :: <topic>'
     'License :: OSI Approved :: MIT License',       # Again, pick a license
-    'Programming Language :: Python :: <python-version>']       # Specify which python versions that you want to suppor
+    'Programming Language :: Python :: 3.10.13']       # Specify which python versions that you want to suppor
 
 
 setup(
