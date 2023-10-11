@@ -1,4 +1,4 @@
-name: ds-template
+name: ds-preprocessing
 channels:
   - defaults
 dependencies:
