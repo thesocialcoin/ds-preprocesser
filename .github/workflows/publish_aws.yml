@@ -1,0 +1,31 @@
+name: Py package deployment to AWS
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: AWS Sandbox
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine build
+      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Build and publish
+        run: |
+          export TWINE_USERNAME=aws
+          export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain ${{ vars.AWS_DOMAIN }} --domain-owner ${{ vars.AWS_DOMAIN_OWNER }} --query authorizationToken --output text`
+          export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain ${{ vars.AWS_DOMAIN }} --domain-owner ${{ vars.AWS_DOMAIN_OWNER }} --repository ${{ vars.AWS_PRIVATE_REPOSITORY }} --format pypi --query repositoryEndpoint --output text`
+          python3 -m build --wheel
+          twine upload dist/*

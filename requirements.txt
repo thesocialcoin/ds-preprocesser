@@ -1,0 +1,6 @@
+jupyter==1.0.0
+isort==3.8.1
+flake8==6.1.0
+twine==4.0.2
+build==1.0.3
+pytest==7.4.2
