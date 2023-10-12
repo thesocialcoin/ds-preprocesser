@@ -103,7 +103,18 @@ make clean
 
 make build (you need the `build` package, by default is installed when you make the environment with `make`.)
 
-## Upload wheel package to AWS
+### Install package (wheel)
+
+------------
+
+1) Make sure you are in the correct environment
+2) Move to the `src` directory
+3) Install wheel using pip
+   ```bash
+   pip install dist/*
+   ```
+
+### Upload wheel package to AWS
 
 ------------
 
