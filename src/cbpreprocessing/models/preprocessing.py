@@ -1,4 +1,24 @@
 import re
+import json
+
+from os import getcwd
+from os.path import join, dirname
+import sys
+
+from collections import Counter
+
+PATH_REPO = dirname(getcwd())
+PATH_PREPROCESSING = join(PATH_REPO, 'ds-preprocessing', 'src' ,'cbpreprocessing')
+PATH_PREPROCESSING_SCRIPTS = join(PATH_PREPROCESSING, 'models')
+PATH_DATA = join(PATH_PREPROCESSING, 'data')
+
+
+PATH_REPO = dirname(getcwd())
+PATH_MODULES = join(PATH_REPO, 'src')
+
+sys.path.append(PATH_PREPROCESSING_SCRIPTS)
+sys.path.append(PATH_MODULES)
+
 
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
@@ -7,7 +27,7 @@ UNICODES = (
 
 
 class PreProcesser:
-    def __call__(self, text):
+    def __call__(self, text, lang):
         """
         Objective: consolidations of all pre-processing
 
@@ -30,6 +50,7 @@ class PreProcesser:
         text, capitalized = replaceCapitalized(text)
         text, emojis = removeEmojis(text)
         text, numbers = removeNumbers(text)
+        text, stopwords = removeStopwords(text, lang)
         features = {
             **features,
             **urls,
@@ -43,8 +64,10 @@ class PreProcesser:
             **elongated,
             **capitalized,
             **{"numbers": numbers},
+            **stopwords
         }
         features["text"] = text
+
 
         return features
 
@@ -202,3 +225,21 @@ def removeNumbers(text):
         text = text.replace(number, "NUM")
 
     return text, {"dates": dates, "years": years, "prices": prices, "other": numbers}
+
+def removeStopwords(text, lang):
+    with open(join(PATH_DATA, 'stop-words/languages.json')) as f:
+        all_langs = json.load(f)
+
+    with open(join(PATH_DATA, f'stop-words/{all_langs[lang]}.txt')) as f:
+        stopwords= f.readlines()
+
+    stopwords = [line.strip() for line in stopwords]
+
+    filtered_tokens = [token for token in text.split() if not token.lower() in stopwords]
+
+    found_stopwords = [token for token in text.split() if token.lower() in stopwords]
+    counts = Counter(found_stopwords)
+
+    cleaned_text = ' '.join(filtered_tokens)
+
+    return cleaned_text, {'stopwords': dict(counts)}
