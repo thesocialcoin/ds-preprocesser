@@ -5,6 +5,8 @@ UNICODES = (
     "\u0D80-\u0DFF\uA8E0–\uA8FF\u0900–\u097F\u1CD0–\u1CFF"
 )
 
+SUPPORTED_LANGUAGES = ["en"]
+
 
 class PreProcesser:
 
@@ -99,6 +101,21 @@ class PreProcesser:
         features["text"] = text
 
         return features
+
+
+class EN_PreProcesser(PreProcesser):
+    """English preprocessor"""
+
+    def __call__(self, text):
+        return super().__call__(text)
+
+
+def preprocesser_factory(lang: str):
+    assert lang in SUPPORTED_LANGUAGES
+
+    if lang == "en":
+        return EN_PreProcesser
+    # ...
 
 
 def removeUnicode(text):
