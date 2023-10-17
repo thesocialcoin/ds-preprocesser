@@ -1,6 +1,12 @@
 import re
 from numpy.typing import ArrayLike
 
+from typing import Optional
+
+import pandas as pd
+import multiprocessing as mp
+import time
+
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
     "\u0D80-\u0DFF\uA8E0–\uA8FF\u0900–\u097F\u1CD0–\u1CFF"
@@ -210,46 +216,62 @@ def removeNumbers(text):
         }
 
 
-def sequential_preprocessing(p: PreProcesser, text_set: ArrayLike) -> ArrayLike:
-    import pandas as pd
-    import time
+def sequential_preprocessing(p: PreProcesser,
+                             text_set: ArrayLike,
+                             verbose=False) -> ArrayLike:
+    """
+    Preprocess a list of texts in sequential
 
-    print("Total records of the dataset", len(text_set))
+    :p
+        - Preprocesser class
+    :text_text
+        - Set of text that need to be mapped
+    :njobs
+        - Number of threds used. If is set to None,
+        it uses the available number of threds.
+    """
+
+    if verbose:
+        print("Total records of the dataset", len(text_set))
 
     df = pd.DataFrame({'text': text_set})
     t1 = time.time()
-    df['text'] = df.apply(p)
+    df['text'] = df['text'].apply(p)
     t2 = time.time()
-    print("time consuming Sequentail Processing to process the Dataset {0:.2f}s".format(round(t2-t1, 2)))
-    return df['text']
+
+    if verbose:
+        print("Time consuming Sequential Processing to process " +
+              "the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+    return df['text'].values
 
 
-def parallel_preprocessing(p: PreProcesser, text_set: ArrayLike) -> ArrayLike:
-    import pandas as pd
-    import multiprocessing as mp
-    import time
+def parallel_preprocessing(p: PreProcesser,
+                           text_set: ArrayLike,
+                           njobs: Optional[int] = None,
+                           verbose=False) -> ArrayLike:
+    """
+    Preprocess a list of texts in parallel
 
-    print("Total records of the dataset", len(text_set))
+    :p
+        - Preprocesser class
+    :text_text
+        - Set of text that need to be mapped
+    :njobs
+        - Number of threds used. If is set to None,
+        it uses the available number of threds.
+    """
+
+    if verbose:
+        print("Total records of the dataset", len(text_set))
 
     df = pd.DataFrame({'text': text_set})
-    pool = mp.Pool(mp.cpu_count())
     t1 = time.time()
+    pool = mp.Pool(njobs if njobs else mp.cpu_count())
     df['text'] = pool.map(p, text_set)
+    pool.close()
     t2 = time.time()
-    print("time consuming Sequentail Processing to process the Dataset {0:.2f}s".format(round(t2-t1, 2)))
-    return df['text']
 
-
-# Before Parallel Processing
-df1 = df.copy()
-t1 = time.time()
-df1['Plot'] = df1['Plot'].apply(clean_text)
-t2 = time.time()
-print("time consuming before Parallel Processing to process the Dataset {0:.2f}s".format(round(t2-t1, 2)))
-# After Parallel Processing
-p = mp.Pool(mp.cpu_count()) # Data parallelism Object
-df2 = df.copy()
-t3 = time.time()
-df2['Plot'] = p.map(clean_text, df2['Plot'])
-t4 = time.time()
-print("time consuming after Parallel Processing to process the Dataset {0:.2f}s".format(round(t4-t3, 2)))
+    if verbose:
+        print("Time consuming Parallel Processing to process " +
+              " the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+    return df['text'].values
