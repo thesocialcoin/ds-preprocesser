@@ -25,9 +25,45 @@ UNICODES = (
     "\u0D80-\u0DFF\uA8E0–\uA8FF\u0900–\u097F\u1CD0–\u1CFF"
 )
 
+SUPPORTED_LANGUAGES = ["en"]
+
 
 class PreProcesser:
+
+
+    def __init__(self,
+                 remove_unicode=True,
+                 remove_urls=True,
+                 remove_mentions=True,
+                 remove_hashtags=True,
+                 remove_multiple_exclamations=True,
+                 remove_multiple_questions=True,
+                 remove_multiple_periods=True,
+                 remove_elongated=True,
+                 remove_emojis=True,
+                 remove_numbers=True,
+                 to_lowercase=True,
+                 replace_at_user=True,
+                 removeStopwords=True
+                 ):
+
+        self.remove_unicode = remove_unicode
+        self.remove_urls = remove_urls
+        self.remove_mentions = remove_mentions
+        self.remove_hashtags = remove_hashtags
+        self.remove_multiple_exclamations = remove_multiple_exclamations
+        self.remove_multiple_questions = remove_multiple_questions
+        self.remove_multiple_periods = remove_multiple_periods
+        self.remove_elongated = remove_elongated
+        self.to_lowercase = to_lowercase
+        self.remove_emojis = remove_emojis
+        self.remove_numbers = remove_numbers
+        self.replace_at_user = replace_at_user
+        self.removeStopwords = removeStopwords
+
+
     def __call__(self, text, lang):
+
         """
         Objective: consolidations of all pre-processing
 
@@ -38,19 +74,43 @@ class PreProcesser:
                 pped text and all features extracted
         """
         features = {"raw_text": text}
-        text = removeUnicode(text)
-        text, urls = removeUrls(text)
-        text, ht_mts = removeHtMentionsSuccessions(text)
-        text, users = replaceAtUser(text)
-        text, hts = removeHashtagInFrontOfWord(text)
-        text, exclams = replaceMultiExclamationMark(text)
-        text, questions = replaceMultiQuestionMark(text)
-        text, stops = replaceMultiStopMark(text)
-        text, elongated = replaceElongated(text)
-        text, capitalized = replaceCapitalized(text)
-        text, emojis = removeEmojis(text)
-        text, numbers = removeNumbers(text)
-        text, stopwords = removeStopwords(text, lang)
+
+        if self.remove_unicode:
+            text = removeUnicode(text)
+
+        text, urls = removeUrls(text) if self.remove_urls else (text, {})
+
+        text, ht_mts = (removeHtMentionsSuccessions(text)
+                        if self.remove_mentions else (text, {}))
+
+        text, users = (replaceAtUser(text)
+                       if self.replace_at_user else (text, {}))
+
+        text, hts = (removeHashtagInFrontOfWord(text)
+                     if self.remove_hashtags else (text, {}))
+
+        text, exclams = (replaceMultiExclamationMark(text)
+                         if self.remove_multiple_exclamations else (text, 0))
+
+        text, questions = (replaceMultiQuestionMark(text)
+                           if self.remove_multiple_questions else (text, 0))
+
+        text, stops = (replaceMultiStopMark(text)
+                       if self.remove_multiple_periods else (text, 0))
+
+        text, elongated = (replaceElongated(text)
+                           if self.remove_elongated else (text, 0))
+
+        text, capitalized = (replaceCapitalized(text)
+                             if self.to_lowercase else (text, {}))
+
+        text, emojis = removeEmojis(text) if self.remove_emojis else (text, {})
+
+        text, numbers = (removeNumbers(text)
+                         if self.remove_numbers else (text, {}))
+        text, stopwords = (removeStopwords(text, lang)
+                         if self.removeStopwords else (text, {}))
+
         features = {
             **features,
             **urls,
@@ -70,6 +130,21 @@ class PreProcesser:
 
 
         return features
+
+
+class EN_PreProcesser(PreProcesser):
+    """English preprocessor"""
+
+    def __call__(self, text):
+        return super().__call__(text)
+
+
+def preprocesser_factory(lang: str):
+    assert lang in SUPPORTED_LANGUAGES
+
+    if lang == "en":
+        return EN_PreProcesser
+    # ...
 
 
 def removeUnicode(text):
@@ -243,3 +318,4 @@ def removeStopwords(text, lang):
     cleaned_text = ' '.join(filtered_tokens)
 
     return cleaned_text, {'stopwords': dict(counts)}
+
