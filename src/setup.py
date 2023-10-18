@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
-import cbpreprocessing
+import preprocesser
 
-DISTNAME = "cbpreprocessing"
+DISTNAME = preprocesser.__name__
 
 MAINTAINER = "Citibeats"
 MAINTAINER_EMAIL = "administration@citibeats.com"
@@ -19,7 +19,7 @@ PROJECT_URLS = {
     "Source Code": "https://github.com/thesocialcoin/ds-preprocessing/tree/main",
 }
 
-VERSION = cbpreprocessing.__version__
+VERSION = preprocesser.__version__
 
 with open("./requirements.txt") as f:
     REQUIREMENTS = f.read().splitlines()

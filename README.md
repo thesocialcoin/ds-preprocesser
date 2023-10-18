@@ -97,7 +97,7 @@ make lint
 
 make clean
 
-## Build package from source code
+### Build package from source code
 
 ------------
 
