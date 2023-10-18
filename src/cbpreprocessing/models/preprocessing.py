@@ -1,4 +1,9 @@
 import re
+import json
+
+import pkg_resources
+from collections import Counter
+
 
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
@@ -202,3 +207,27 @@ def removeNumbers(text):
         text = text.replace(number, "NUM")
 
     return text, {"dates": dates, "years": years, "prices": prices, "other": numbers}
+
+def removeStopwords(text, lang):
+
+    data_path = pkg_resources.resource_filename('cbpreprocessing', 'data/stop-words/languages.json')
+
+    with open(data_path) as f:
+        all_langs = json.load(f)
+
+    stopwords_file_path = pkg_resources.resource_filename('cbpreprocessing', f'data/stop-words/{all_langs[lang]}.txt')
+
+    with open(stopwords_file_path) as f:
+        stopwords= f.readlines()
+
+    stopwords = [line.strip() for line in stopwords]
+
+    filtered_tokens = [token for token in text.split() if not token.lower() in stopwords]
+
+    found_stopwords = [token for token in text.split() if token.lower() in stopwords]
+    counts = Counter(found_stopwords)
+
+    cleaned_text = ' '.join(filtered_tokens)
+
+    return cleaned_text, {'stopwords': dict(counts)}
+

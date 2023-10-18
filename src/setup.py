@@ -45,5 +45,6 @@ setup(
     version=VERSION,
     install_requires=REQUIREMENTS,
     packages=PACKAGES,
-    classifiers=CLASSIFIERS
+    classifiers=CLASSIFIERS,
+    package_data={DISTNAME: ['data/stop-words/*']}
 )
