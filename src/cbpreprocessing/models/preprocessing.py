@@ -1,4 +1,11 @@
 import re
+from numpy.typing import ArrayLike
+
+from typing import Optional
+
+import pandas as pd
+import multiprocessing as mp
+import time
 
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
@@ -270,4 +277,71 @@ def removeNumbers(text):
     for number in numbers:
         text = text.replace(number, "NUM")
 
-    return text, {"dates": dates, "years": years, "prices": prices, "other": numbers}
+    return text, {
+        "dates": dates,
+        "years": years,
+        "prices": prices,
+        "other": numbers
+        }
+
+
+def sequential_preprocessing(p: PreProcesser,
+                             text_set: ArrayLike,
+                             verbose=False) -> ArrayLike:
+    """
+    Preprocess a list of texts in sequential
+
+    :p
+        - Preprocesser class
+    :text_text
+        - Set of text that need to be mapped
+    """
+
+    if verbose:
+        print("Total records of the dataset", len(text_set))
+
+    df = pd.DataFrame({'text': text_set})
+    t1 = time.time()
+    df['text'] = df['text'].apply(p)
+    t2 = time.time()
+
+    if verbose:
+        print("Time consuming Sequential Processing to process " +
+              "the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+    return df['text'].values
+
+
+def parallel_preprocessing(p: PreProcesser,
+                           text_set: ArrayLike,
+                           njobs: Optional[int] = None,
+                           verbose=False) -> ArrayLike:
+    """
+    Preprocess a list of texts in parallel.
+    The performance is evident when you deal with
+    a big dataset of text.
+
+    :p
+        - Preprocesser class
+    :text_text
+        - Set of text that need to be mapped
+    :njobs
+        - Number of threds used. If is set to None,
+        it uses the available number of threds.
+    """
+
+    if verbose:
+        print("Total records of the dataset", len(text_set))
+
+    df = pd.DataFrame({'text': text_set})
+    processes = njobs if njobs else (mp.cpu_count() - 1
+                                     if mp.cpu_count() > 1
+                                     else mp.cpu_count())
+    t1 = time.time()
+    with mp.Pool(processes=processes) as pool:
+        df['text'] = pool.map(p, text_set)
+    t2 = time.time()
+
+    if verbose:
+        print("Time consuming Parallel Processing to process " +
+              "the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+    return df['text'].values
