@@ -20,7 +20,7 @@ Installation
 Dependencies
 ~~~~~~~~~~~~
 
-scikit-learn requires:
+preprocesser requires:
 
 - Python (>= |PythonMinVersion|)
 
