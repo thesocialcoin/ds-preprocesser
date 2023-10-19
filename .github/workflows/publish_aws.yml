@@ -27,5 +27,6 @@ jobs:
           export TWINE_USERNAME=aws
           export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain ${{ vars.AWS_DOMAIN }} --domain-owner ${{ vars.AWS_DOMAIN_OWNER }} --query authorizationToken --output text`
           export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain ${{ vars.AWS_DOMAIN }} --domain-owner ${{ vars.AWS_DOMAIN_OWNER }} --repository ${{ vars.AWS_PRIVATE_REPOSITORY }} --format pypi --query repositoryEndpoint --output text`
+          cd src/
           python3 -m build --wheel
           twine upload dist/*
