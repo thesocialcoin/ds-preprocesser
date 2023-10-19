@@ -3,6 +3,11 @@
 .. |PythonMinVersion| replace:: 3.8
 
 
+.. image:: https://www.citibeats.com/hs-fs/hubfs/tmp_1677754011016.jpg?width=1600&height=278&name=tmp_1677754011016.jpg
+  :target: https://www.citibeats.com/
+
+\
+
 **preprocesser** is a Python module for preprocess text in different languagues.
 
 The project is mantained by the Data Science team of Citibeats started in 2023.
