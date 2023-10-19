@@ -1,11 +1,18 @@
 import re
+import json
+from os.path import join
+import pkg_resources
+from collections import Counter
+
 from numpy.typing import ArrayLike
 
-from typing import Optional
+from typing import Optional, Any, Dict
 
 import pandas as pd
 import multiprocessing as mp
 import time
+
+from preprocesser import __name__
 
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
@@ -29,7 +36,7 @@ class PreProcesser:
                  remove_emojis=True,
                  remove_numbers=True,
                  to_lowercase=True,
-                 replace_at_user=True
+                 replace_at_user=True,
                  ):
 
         self.remove_unicode = remove_unicode
@@ -113,8 +120,63 @@ class PreProcesser:
 class EN_PreProcesser(PreProcesser):
     """English preprocessor"""
 
+    def __init__(self, args: Optional[Dict[str, Any]] = None):
+
+        args_ = {
+            "remove_stopwords": True,
+            **(args or {})
+        }
+
+        self.remove_stopwords = args_["remove_stopwords"]
+
+        if "remove_stopwords" in args_:
+            del args_["remove_stopwords"]
+
+        super().__init__(**args_)
+
     def __call__(self, text):
-        return super().__call__(text)
+        base_preprocesser = super().__call__(text)
+        text = base_preprocesser["text"]
+
+        text, stopwords = (removeStopWords(text, "en")
+                           if self.remove_stopwords else (text, {}))
+        features = {
+            **base_preprocesser,
+            **stopwords
+        }
+        features["text"] = text
+        return features
+
+
+class ES_PreProcesser(PreProcesser):
+    """Espanish preprocessor"""
+
+    def __init__(self, args: Optional[Dict[str, Any]] = None):
+
+        args_ = {
+            "remove_stopwords": True,
+            **(args or {})
+        }
+
+        self.remove_stopwords = args_["remove_stopwords"]
+
+        if "remove_stopwords" in args_:
+            del args_["remove_stopwords"]
+
+        super().__init__(**args_)
+
+    def __call__(self, text):
+        base_preprocesser = super().__call__(text)
+        text = base_preprocesser["text"]
+
+        text, stopwords = (removeStopWords(text, "es")
+                           if self.remove_stopwords else (text, {}))
+        features = {
+            **base_preprocesser,
+            **stopwords
+        }
+        features["text"] = text
+        return features
 
 
 def preprocesser_factory(lang: str):
@@ -283,6 +345,37 @@ def removeNumbers(text):
         "prices": prices,
         "other": numbers
         }
+
+
+def removeStopWords(text, lang):
+
+    stop_words_uri = join('data', 'stop-words')
+
+    data_path = pkg_resources \
+        .resource_filename(__name__, f"{stop_words_uri}/languages.json")
+
+    with open(data_path) as f:
+        all_langs = json.load(f)
+
+    stopwords_file_path = pkg_resources \
+        .resource_filename(__name__, f'{stop_words_uri}/{all_langs[lang]}.txt')
+
+    with open(stopwords_file_path) as f:
+        stopwords = f.readlines()
+
+    stopwords = [line.strip() for line in stopwords]
+
+    filtered_tokens = [token for token in text.split()
+                       if not token.lower() in stopwords]
+
+    found_stopwords = [token for token in text.split()
+                       if token.lower() in stopwords]
+
+    counts = Counter(found_stopwords)
+
+    cleaned_text = ' '.join(filtered_tokens)
+
+    return cleaned_text, {'stopwords': dict(counts)}
 
 
 def sequential_preprocessing(p: PreProcesser,
