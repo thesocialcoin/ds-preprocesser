@@ -73,7 +73,7 @@ After the make instruction, remember to activate the environment with `conda act
 
 make environment
 
-## Installing investigation requirements
+### Installing investigation requirements
 
 ------------
 
@@ -110,6 +110,7 @@ make build (you need the `build` package, by default is installed when you make 
 1) Make sure you are in the correct environment
 2) Move to the `src` directory
 3) Install wheel using pip
+
    ```bash
    pip install dist/*
    ```
