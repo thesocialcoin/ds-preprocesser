@@ -5,7 +5,7 @@
 
 The **preprocesser** is a Python module for preprocess text in different languagues.
 
-The project is mainteined by the Data Science team of Citibeats started in 2023.
+The project is maintained by the Data Science team of Citibeats started in 2023.
 
 Website: https://www.citibeats.com/
 
