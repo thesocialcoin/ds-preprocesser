@@ -6,6 +6,10 @@ from preprocesser import __name__
 
 
 def make_stopwords(lang: str) -> set[str]:
+    """
+    function that loads the stopwords of a specific
+    language in the form of a set.
+    """
 
     stop_words_uri = join('data', 'stop-words')
     data_path = pkg_resources \
