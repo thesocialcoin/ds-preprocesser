@@ -121,15 +121,25 @@ class EN_PreProcesser(PreProcesser):
     """English preprocessor"""
 
     def __init__(self, args: Optional[Dict[str, Any]] = None):
-        args_ = args if args else {}
+
+        args_ = {
+            "remove_stopwords": True,
+            **(args or {})
+        }
+
+        self.remove_stopwords = args_["remove_stopwords"]
+
+        if "remove_stopwords" in args_:
+            del args_["remove_stopwords"]
+
         super().__init__(**args_)
 
     def __call__(self, text):
         base_preprocesser = super().__call__(text)
         text = base_preprocesser["text"]
 
-        # Check if we need to remove stopwords
-        text, stopwords = removeStopWords(text, "en")
+        text, stopwords = (removeStopWords(text, "en")
+                           if self.remove_stopwords else (text, {}))
         features = {
             **base_preprocesser,
             **stopwords
@@ -143,12 +153,15 @@ class ES_PreProcesser(PreProcesser):
 
     def __init__(self, args: Optional[Dict[str, Any]] = None):
 
-        args_ = args if args else {}
+        args_ = {
+            "remove_stopwords": True,
+            **(args or {})
+        }
 
-        self.remove_stopwords = (args.get("remove_stopwords")
-                                 if args.get("remove_stopwords") else True)
+        self.remove_stopwords = args_["remove_stopwords"]
 
-        del args["remove_stopwords"]
+        if "remove_stopwords" in args_:
+            del args_["remove_stopwords"]
 
         super().__init__(**args_)
 
