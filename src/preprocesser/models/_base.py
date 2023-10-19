@@ -100,8 +100,11 @@ def replaceMultiStopMark(text):
 def replaceElongated(text):
     """Replaces an elongated word with its basic form with >2 --> 2 letters"""
     quantifiers = '{2,}'
-    elongateds = re.findall(r"([a-zA-Z])\1{2,}", text)
-    text = re.sub(fr"([a-zA-Z{UNICODES}]+)\1{quantifiers}", r"\1", text)
+    elongateds = re.findall(fr"([a-zA-Z{UNICODES}]+)\1{quantifiers}", text)
+
+    for i in range(len(elongateds)):
+        text = re.sub(fr"([a-zA-Z{UNICODES}]+)\1{quantifiers}", r"\1", text)
+
     return text, {"elongateds": len(elongateds)}
 
 
