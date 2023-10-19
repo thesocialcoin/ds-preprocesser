@@ -28,8 +28,8 @@ PACKAGES = find_packages(exclude=["tests"])
 
 CLASSIFIERS = [
     'Development Status :: 3 - Alpha',              # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
-    'Intended Audience :: <audience>',          # Define your audience
-    'Topic :: <topic>'
+    'Intended Audience :: Data Scientist, Developers',          # Define your audience
+    'Topic :: preprocessing text'
     'License :: OSI Approved :: MIT License',       # Again, pick a license
     'Programming Language :: Python :: 3.10.13']       # Specify which python versions that you want to suppor
 
