@@ -1,7 +1,4 @@
 import re
-import json
-from os.path import join
-import pkg_resources
 from collections import Counter
 
 from numpy.typing import ArrayLike
@@ -12,7 +9,7 @@ import pandas as pd
 import multiprocessing as mp
 import time
 
-from preprocesser import __name__
+from preprocesser.data import make_stopwords
 
 UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
@@ -349,21 +346,7 @@ def removeNumbers(text):
 
 def removeStopWords(text, lang):
 
-    stop_words_uri = join('data', 'stop-words')
-
-    data_path = pkg_resources \
-        .resource_filename(__name__, f"{stop_words_uri}/languages.json")
-
-    with open(data_path) as f:
-        all_langs = json.load(f)
-
-    stopwords_file_path = pkg_resources \
-        .resource_filename(__name__, f'{stop_words_uri}/{all_langs[lang]}.txt')
-
-    with open(stopwords_file_path) as f:
-        stopwords = f.readlines()
-
-    stopwords = [line.strip() for line in stopwords]
+    stopwords = make_stopwords(lang)
 
     filtered_tokens = [token for token in text.split()
                        if not token.lower() in stopwords]
