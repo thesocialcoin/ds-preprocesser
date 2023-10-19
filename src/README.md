@@ -25,16 +25,7 @@ to AWS the easiest way to install preprocesser is using ``pip``.
 pip install preprocesser
 ```
 
-The documentation includes more detailed `installation instructions <https://www.notion.so/citibeats/AWS-CodeArtifact-Tutorial-533ca93698ec4a1aa53e3f8d3830b075?pvs=4>`_.
-
-
-## Development
-
-We welcome new contributors of all experience levels. The scikit-learn
-community goals are to be helpful, welcoming, and effective. The
-`Development Guide <https://scikit-learn.org/stable/developers/index.html>`_
-has detailed information about contributing code, documentation, tests, and
-more. We've included some basic information in this README.
+The documentation includes more detailed [installation instructions](https://www.notion.so/citibeats/AWS-CodeArtifact-Tutorial-533ca93698ec4a1aa53e3f8d3830b075?pvs=4)
 
 ### Important links
 
@@ -45,4 +36,6 @@ more. We've included some basic information in this README.
 
 You can check the latest sources with the command::
 
-    git clone https://github.com/thesocialcoin/ds-preprocesser.git
+```sh
+git clone https://github.com/thesocialcoin/ds-preprocesser.git
+```
