@@ -15,8 +15,8 @@ URL = "https://www.citibeats.com/"
 
 PROJECT_URLS = {
     "Bug Tracker": "https://github.com/thesocialcoin/ds-preprocessing/issues",
-    "Documentation": "https://github.com/thesocialcoin/ds-preprocessing/tree/main/src",
-    "Source Code": "https://github.com/thesocialcoin/ds-preprocessing/tree/main",
+    "Documentation": "https://github.com/thesocialcoin/ds-preprocesser/tree/main/src",
+    "Source Code": "https://github.com/thesocialcoin/ds-preprocesser/tree/main",
 }
 
 VERSION = preprocesser.__version__
