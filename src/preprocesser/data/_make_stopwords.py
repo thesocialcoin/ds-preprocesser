@@ -1,3 +1,4 @@
+from typing import Set
 import json
 from os.path import join
 import pkg_resources
@@ -5,7 +6,7 @@ import pkg_resources
 from preprocesser import __name__
 
 
-def make_stopwords(lang: str) -> set[str]:
+def make_stopwords(lang: str) -> Set[str]:
     """
     function that loads the stopwords of a specific
     language in the form of a set.
