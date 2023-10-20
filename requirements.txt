@@ -4,3 +4,9 @@ flake8==6.1.0
 twine==4.0.2
 build==1.0.3
 pytest==7.4.2
+
+seaborn==0.12.2
+matplotlib==3.7.1
+mlflow==2.7.0
+python-dotenv==1.0.0
+joblib==1.2.0
