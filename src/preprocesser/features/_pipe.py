@@ -1,14 +1,17 @@
 import time
 import pandas as pd
-from numpy.typing import ArrayLike
+from typing import Dict, Any, List
 import multiprocessing as mp
+import logging
 
 from preprocesser.models import PreProcesser
 
+logger = logging.getLogger(__name__)
+
 
 def sequential_preprocessing(p: PreProcesser,
-                             text_set: ArrayLike,
-                             verbose=False) -> ArrayLike:
+                             text_set: List[str],
+                             verbose=False) -> List[Dict[str, Any]]:
     """
     Preprocess a list of texts in sequential
 
@@ -18,24 +21,22 @@ def sequential_preprocessing(p: PreProcesser,
         - Set of text that need to be mapped
     """
 
-    if verbose:
-        print("Total records of the dataset", len(text_set))
-
     df = pd.DataFrame({'text': text_set})
     t1 = time.time()
     df['text'] = df['text'].apply(p)
     t2 = time.time()
 
     if verbose:
-        print("Time consuming Sequential Processing to process " +
-              "the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+        logger.info("Total records of the dataset: {}".format(len(text_set)))
+        logger.info("Time consumed preprocessing in sequential: " +
+                    "{0:.2f}s".format(round(t2-t1, 2)))
     return df['text'].values
 
 
 def parallel_preprocessing(p: PreProcesser,
-                           text_set: ArrayLike,
+                           text_set: List[str],
                            njobs: int = -1,
-                           verbose=False) -> ArrayLike:
+                           verbose=False) -> List[Dict[str, Any]]:
     """
     Preprocess a list of texts in parallel.
     The performance is evident when you deal with
@@ -50,9 +51,6 @@ def parallel_preprocessing(p: PreProcesser,
         the value is -1, which mean it uses all the available threds.
     """
 
-    if verbose:
-        print("Total records of the dataset", len(text_set))
-
     df = pd.DataFrame({'text': text_set})
     processes = mp.cpu_count() if njobs == -1 else njobs
     processes = mp.cpu_count() if processes > mp.cpu_count() else processes
@@ -62,6 +60,8 @@ def parallel_preprocessing(p: PreProcesser,
     t2 = time.time()
 
     if verbose:
-        print("Time consuming Parallel Processing to process " +
-              "the Dataset {0:.2f}s".format(round(t2-t1, 2)))
+        logger.info("Total records of the dataset - {}".format(len(text_set)))
+        logger.info("Number of jobs: {}".format(njobs))
+        logger.info("Time consuming in parallel: " +
+                    "{0:.2f}s".format(round(t2-t1, 2)))
     return df['text'].values
