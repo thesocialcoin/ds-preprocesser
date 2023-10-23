@@ -61,6 +61,10 @@ def removeHtMentionsSuccessions(text):
     return text, ht_mts
 
 
+def tolower(text: str) -> str:
+    return text.lower()
+
+
 def replaceAtUser(text):
     """Replaces "@user" with "atUser" """
     users = re.findall(r"@[\w+" + UNICODES + "]+", text)
@@ -111,14 +115,6 @@ def replaceElongated(text):
         text = re.sub(pattern, r"\1", text)
 
     return text, {"elongateds": len(elongateds)}
-
-
-def replaceCapitalized(text):
-    capitalized = re.findall(r"\b[A-Z0-9]{3,}\b", text)
-    for cap in capitalized:
-        if cap != "URL":
-            text = text.replace(cap, cap.lower())
-    return text, {"capitalized": capitalized}
 
 
 def removeEmojis(text):

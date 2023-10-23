@@ -9,16 +9,17 @@ from . import (removeEmojis,
                removeUrls,
                replaceMultiStopMark,
                replaceAtUser,
-               replaceCapitalized,
                replaceElongated,
                replaceMultiExclamationMark,
                replaceMultiQuestionMark,
-               removePunctuation)
+               removePunctuation,
+               tolower)
 
 
 class PreProcesser:
 
     def __init__(self,
+                 tolower=True,
                  remove_unicode=True,
                  remove_urls=True,
                  remove_mentions=True,
@@ -29,12 +30,12 @@ class PreProcesser:
                  remove_elongated=True,
                  remove_emojis=True,
                  remove_numbers=True,
-                 to_lowercase=True,
                  replace_at_user=True,
-                 punctuation=True
+                 punctuation=False
                  ):
 
         self.remove_unicode = remove_unicode
+        self.tolower = tolower
         self.remove_urls = remove_urls
         self.remove_mentions = remove_mentions
         self.remove_hashtags = remove_hashtags
@@ -42,7 +43,6 @@ class PreProcesser:
         self.remove_multiple_questions = remove_multiple_questions
         self.remove_multiple_periods = remove_multiple_periods
         self.remove_elongated = remove_elongated
-        self.to_lowercase = to_lowercase
         self.remove_emojis = remove_emojis
         self.remove_numbers = remove_numbers
         self.replace_at_user = replace_at_user
@@ -62,6 +62,9 @@ class PreProcesser:
 
         if self.remove_unicode:
             text = removeUnicode(text)
+
+        if self.tolower:
+            text = tolower(text)
 
         text, urls = removeUrls(text) if self.remove_urls else (text, {})
 
@@ -86,16 +89,13 @@ class PreProcesser:
         text, elongated = (replaceElongated(text)
                            if self.remove_elongated else (text, 0))
 
-        text, capitalized = (replaceCapitalized(text)
-                             if self.to_lowercase else (text, {}))
-
         text, emojis = removeEmojis(text) if self.remove_emojis else (text, {})
 
         text, numbers = (removeNumbers(text)
                          if self.remove_numbers else (text, {}))
-        
+
         text, punctuation = (removePunctuation(text)
-                    if self.punctuation else (text, {}))
+                             if self.punctuation else (text, {}))
 
         features = {
             **features,
@@ -108,7 +108,6 @@ class PreProcesser:
             **questions,
             **stops,
             **elongated,
-            **capitalized,
             **{"numbers": numbers},
             **punctuation
         }
