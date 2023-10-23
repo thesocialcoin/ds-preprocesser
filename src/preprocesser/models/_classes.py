@@ -32,7 +32,7 @@ class PreProcesser:
                  remove_emojis=True,
                  remove_numbers=True,
                  replace_at_user=True,
-                 remove_multi_white_space=True
+                 remove_multi_white_space=True,
                  punctuation=False
                  ):
 
