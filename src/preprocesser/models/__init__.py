@@ -10,7 +10,8 @@ from ._base import (removeEmojis,
                     replaceElongated,
                     replaceMultiExclamationMark,
                     replaceMultiQuestionMark,
-                    replaceMultiStopMark)
+                    replaceMultiStopMark,
+                    removePunctuation)
 
 from ._classes import (PreProcesser,
                        EN_PreProcesser,

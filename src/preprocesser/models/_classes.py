@@ -12,7 +12,8 @@ from . import (removeEmojis,
                replaceCapitalized,
                replaceElongated,
                replaceMultiExclamationMark,
-               replaceMultiQuestionMark)
+               replaceMultiQuestionMark,
+               removePunctuation)
 
 
 class PreProcesser:
@@ -30,6 +31,7 @@ class PreProcesser:
                  remove_numbers=True,
                  to_lowercase=True,
                  replace_at_user=True,
+                 punctuation=True
                  ):
 
         self.remove_unicode = remove_unicode
@@ -44,6 +46,7 @@ class PreProcesser:
         self.remove_emojis = remove_emojis
         self.remove_numbers = remove_numbers
         self.replace_at_user = replace_at_user
+        self.punctuation = punctuation
 
     def __call__(self, text) -> Dict[str, Any]:
         """
@@ -90,6 +93,9 @@ class PreProcesser:
 
         text, numbers = (removeNumbers(text)
                          if self.remove_numbers else (text, {}))
+        
+        text, punctuation = (removePunctuation(text)
+                    if self.punctuation else (text, {}))
 
         features = {
             **features,
@@ -104,6 +110,7 @@ class PreProcesser:
             **elongated,
             **capitalized,
             **{"numbers": numbers},
+            **punctuation
         }
         features["text"] = text
 
