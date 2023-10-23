@@ -218,3 +218,21 @@ def removePunctuation(text):
         text = re.sub(pattern, r" ", text)
 
     return text, {"punctuation": punctuation}
+
+
+def removeMultiWhiteSpace(text: str) -> str:
+    """
+    Eliminate duplicate white spaces, e.g:
+
+    Input:
+       "  Hello World! ;) .  "
+    Output:
+        " Hello World! ;) . hola "
+
+    Args:
+        text (str)
+
+    Returns:
+        str
+    """
+    return re.sub(r"\s\s+", " ", text)

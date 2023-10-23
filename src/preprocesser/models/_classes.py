@@ -13,6 +13,7 @@ from . import (removeEmojis,
                replaceMultiExclamationMark,
                replaceMultiQuestionMark,
                removePunctuation,
+               removeMultiWhiteSpace,
                tolower)
 
 
@@ -31,9 +32,11 @@ class PreProcesser:
                  remove_emojis=True,
                  remove_numbers=True,
                  replace_at_user=True,
+                 remove_multi_white_space=True
                  punctuation=False
                  ):
 
+        self.remove_multiple_white_space = remove_multi_white_space
         self.remove_unicode = remove_unicode
         self.tolower = tolower
         self.remove_urls = remove_urls
@@ -96,6 +99,9 @@ class PreProcesser:
 
         text, punctuation = (removePunctuation(text)
                              if self.punctuation else (text, {}))
+
+        if self.remove_multiple_white_space:
+            text = removeMultiWhiteSpace(text)
 
         features = {
             **features,
