@@ -24,7 +24,7 @@ def removeUnicode(text: str) -> str:
     return text
 
 
-def removeUrls(text: str)Tuple[str, Dict[str, List[str]]]:
+def removeUrls(text: str) -> Tuple[str, Dict[str, List[str]]]:
     """change URL by special token
     
     Args:
@@ -44,7 +44,7 @@ def removeUrls(text: str)Tuple[str, Dict[str, List[str]]]:
     return text, {"urls": urls}
 
 
-def removeHtMentionsSuccessions(text: str)Tuple[str, Dict[str, Optional[str]]]:
+def removeHtMentionsSuccessions(text: str) -> Tuple[str, Dict[str, Optional[str]]]:
     """Remove #s and @s that are at the beginning or at the end of a tweet
     
     Args:
@@ -252,7 +252,7 @@ def removeNumbers(text: str) -> Tuple[str, Dict[str, List[str]]]:
         }
 
 
-def removeStopWords(text: str, lang: str) -> Tuple[str, Dict[str, Dict[Counter]]]:
+def removeStopWords(text: str, lang: str) -> Tuple[str, Dict[str, Counter]]:
     """
     Removes stopwords from the input text based on the specified language
 
