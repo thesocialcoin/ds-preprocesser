@@ -1,4 +1,5 @@
 import re
+import string
 from collections import Counter
 
 from preprocesser.data import make_stopwords
@@ -192,3 +193,12 @@ def removeStopWords(text, lang):
     cleaned_text = ' '.join(filtered_tokens)
 
     return cleaned_text, {'stopwords': dict(counts)}
+
+def removePunctuation(text):
+    pattern = f'[{string.punctuation}¡¿]+'
+
+    punctuation = re.findall(pattern, text)
+    for _ in punctuation:
+        text = re.sub(pattern, r" ", text)
+
+    return text, {"punctuation": punctuation}
