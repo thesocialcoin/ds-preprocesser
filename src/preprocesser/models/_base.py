@@ -62,6 +62,25 @@ def removeHtMentionsSuccessions(text):
 
 
 def tolower(text: str) -> str:
+    """_summary_
+
+    Args:
+        text (str)
+
+    Returns:
+        str:
+
+    Example:
+        Input:
+            @GoldingBF Giorgia is halting the migrant boats. Stemming the tide.
+            Give her time to start the deportations.
+            She has to prove Fratelli d'Italia can govern Italy.
+
+        Output:
+            @goldingbf giorgia is halting the migrant boats. stemming the tide.
+            give her time to start the deportations. she has to prove fratelli
+            d'italia can govern italy.
+    """
     return text.lower()
 
 
@@ -189,6 +208,7 @@ def removeStopWords(text, lang):
     cleaned_text = ' '.join(filtered_tokens)
 
     return cleaned_text, {'stopwords': dict(counts)}
+
 
 def removePunctuation(text):
     pattern = f'[{string.punctuation}¡¿]+'
