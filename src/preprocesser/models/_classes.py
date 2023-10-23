@@ -45,7 +45,7 @@ class PreProcesser:
         self.remove_numbers = remove_numbers
         self.replace_at_user = replace_at_user
 
-    def __call__(self, text):
+    def __call__(self, text) -> Dict[str, Any]:
         """
         Objective: consolidations of all pre-processing
 
@@ -127,7 +127,7 @@ class EN_PreProcesser(PreProcesser):
 
         super().__init__(**args_)
 
-    def __call__(self, text):
+    def __call__(self, text) -> Dict[str, Any]:
         base_preprocesser = super().__call__(text)
         text = base_preprocesser["text"]
 
@@ -158,7 +158,7 @@ class ES_PreProcesser(PreProcesser):
 
         super().__init__(**args_)
 
-    def __call__(self, text):
+    def __call__(self, text) -> Dict[str, Any]:
         base_preprocesser = super().__call__(text)
         text = base_preprocesser["text"]
 
