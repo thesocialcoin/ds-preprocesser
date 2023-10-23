@@ -4,7 +4,7 @@ from . import (EN_PreProcesser,
                ES_PreProcesser,
                PreProcesser)
 
-SUPPORTED_LANGUAGES = ["en"]
+SUPPORTED_LANGUAGES = ["en", "es"]
 
 
 def preprocesser_factory(lang: Optional[str]):
