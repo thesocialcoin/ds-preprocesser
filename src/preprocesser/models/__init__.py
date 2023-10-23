@@ -6,16 +6,18 @@ from ._base import (removeEmojis,
                     removeStopWords,
                     removeUrls,
                     replaceAtUser,
-                    replaceCapitalized,
                     replaceElongated,
                     replaceMultiExclamationMark,
                     replaceMultiQuestionMark,
                     replaceMultiStopMark,
-                    removePunctuation)
+                    removePunctuation,
+                    tolower)
 
 from ._classes import (PreProcesser,
                        EN_PreProcesser,
                        ES_PreProcesser)
+
+from ._factory import preprocesser_factory
 
 
 __all__ = ["removeEmojis",
@@ -26,12 +28,15 @@ __all__ = ["removeEmojis",
            "removeStopWords",
            "removeUrls",
            "replaceAtUser",
-           "replaceCapitalized",
            "replaceElongated",
            "replaceMultiExclamationMark",
            "replaceMultiQuestionMark",
            "replaceMultiStopMark",
+           "removePunctuation",
+           "tolower",
 
            "PreProcesser",
            "EN_PreProcesser",
-           "ES_PreProcesser"]
+           "ES_PreProcesser",
+
+           "preprocesser_factory"]
