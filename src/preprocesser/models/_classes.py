@@ -14,7 +14,8 @@ from . import (removeEmojis,
                replaceMultiQuestionMark,
                removePunctuation,
                removeMultiWhiteSpace,
-               tolower)
+               toLower,
+               removeTags)
 
 
 class PreProcesser:
@@ -24,7 +25,8 @@ class PreProcesser:
                  remove_unicode=True,
                  remove_urls=True,
                  remove_mentions=True,
-                 remove_hashtags=True,
+                 remove_tags=True,
+                 remove_tags_in_front_of_words=True,
                  remove_multiple_exclamations=True,
                  remove_multiple_questions=True,
                  remove_multiple_periods=True,
@@ -33,7 +35,8 @@ class PreProcesser:
                  remove_numbers=True,
                  replace_at_user=True,
                  remove_multi_white_space=True,
-                 punctuation=False
+                 punctuation=False,
+                 use_placeholder=False,
                  ):
 
         self.remove_multiple_white_space = remove_multi_white_space
@@ -41,7 +44,8 @@ class PreProcesser:
         self.tolower = tolower
         self.remove_urls = remove_urls
         self.remove_mentions = remove_mentions
-        self.remove_hashtags = remove_hashtags
+        self.remove_tags = remove_tags
+        self.remove_tags_in_front_of_words = remove_tags_in_front_of_words
         self.remove_multiple_exclamations = remove_multiple_exclamations
         self.remove_multiple_questions = remove_multiple_questions
         self.remove_multiple_periods = remove_multiple_periods
@@ -50,6 +54,7 @@ class PreProcesser:
         self.remove_numbers = remove_numbers
         self.replace_at_user = replace_at_user
         self.punctuation = punctuation
+        self.use_placeholder = use_placeholder
 
     def __call__(self, text) -> Dict[str, Any]:
         """
@@ -67,18 +72,23 @@ class PreProcesser:
             text = removeUnicode(text)
 
         if self.tolower:
-            text = tolower(text)
+            text = toLower(text)
 
-        text, urls = removeUrls(text) if self.remove_urls else (text, {})
+        text, urls = (removeUrls(text, use_placeholder=self.use_placeholder)
+                      if self.remove_urls else (text, {}))
 
         text, ht_mts = (removeHtMentionsSuccessions(text)
                         if self.remove_mentions else (text, {}))
 
-        text, users = (replaceAtUser(text)
+        text, users = (replaceAtUser(text,
+                                     use_placeholder=self.use_placeholder)
                        if self.replace_at_user else (text, {}))
 
+        text, tags = (removeTags(text, use_placeholder=self.use_placeholder)
+                      if self.remove_tags else (text, {}))
+
         text, hts = (removeHashtagInFrontOfWord(text)
-                     if self.remove_hashtags else (text, {}))
+                     if self.remove_tags_in_front_of_words else (text, {}))
 
         text, exclams = (replaceMultiExclamationMark(text)
                          if self.remove_multiple_exclamations else (text, 0))
@@ -108,6 +118,7 @@ class PreProcesser:
             **urls,
             **{"successions": ht_mts},
             **users,
+            **tags,
             **hts,
             **emojis,
             **exclams,
@@ -117,7 +128,7 @@ class PreProcesser:
             **{"numbers": numbers},
             **punctuation
         }
-        features["text"] = text
+        features["text"] = text.strip()
 
         return features
 

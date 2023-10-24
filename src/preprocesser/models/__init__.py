@@ -12,7 +12,8 @@ from ._base import (removeEmojis,
                     replaceMultiStopMark,
                     removePunctuation,
                     removeMultiWhiteSpace,
-                    tolower)
+                    toLower,
+                    removeTags)
 
 from ._classes import (PreProcesser,
                        EN_PreProcesser,
@@ -35,8 +36,9 @@ __all__ = ["removeEmojis",
            "replaceMultiStopMark",
            "removePunctuation",
            "removeMultiWhiteSpace",
-           "tolower",
-           
+           "toLower",
+           "removeTags",
+
            "PreProcesser",
            "EN_PreProcesser",
            "ES_PreProcesser",

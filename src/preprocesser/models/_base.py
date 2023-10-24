@@ -11,9 +11,30 @@ UNICODES = (
 )
 
 
+def removeTags(text: str,
+               placeholder="TAG",
+               use_placeholder=True) -> Tuple[str, Dict[str, List[str]]]:
+    """Removes every occurence of a tag or hashtag in the text
+    Args:
+        text (str):
+
+    Returns:
+        Tuple[str, Dict[str, List[str]]]
+    """
+
+    pattern = r'#\w+'
+
+    # Use re.findall to find all hashtags in the text
+    tags = re.findall(pattern, text)
+    for tag in tags:
+        text = (text.replace(tag, placeholder)
+                if use_placeholder else text.replace(tag, ""))
+    return text, {"tags": tags}
+
+
 def removeUnicode(text: str) -> str:
     """Removes unicode strings like "\u002c" printable such as \t \r and \n
-    
+
     Args:
         text (str): The input text
     """
@@ -24,9 +45,11 @@ def removeUnicode(text: str) -> str:
     return text
 
 
-def removeUrls(text: str) -> Tuple[str, Dict[str, List[str]]]:
+def removeUrls(text: str,
+               placeholder="URL",
+               use_placeholder=True) -> Tuple[str, Dict[str, List[str]]]:
     """change URL by special token
-    
+
     Args:
         text (str): The input text
     """
@@ -38,15 +61,16 @@ def removeUrls(text: str) -> Tuple[str, Dict[str, List[str]]]:
         text,
     )
     for url in urls:
-        text = text.replace(url, "URL")
-    while re.search(r"(URL)(.*)\1", text):
-        text = re.sub(r"(URL)(.*)\1", r"\1\2", text).strip()
+        text = (text.replace(url, placeholder)
+                if use_placeholder else text.replace(url, ""))
+#    while re.search(r"(URL)(.*)\1", text):
+#        text = re.sub(r"(URL)(.*)\1", r"\1\2", text).strip()
     return text, {"urls": urls}
 
 
 def removeHtMentionsSuccessions(text: str) -> Tuple[str, Dict[str, Optional[str]]]:
     """Remove #s and @s that are at the beginning or at the end of a tweet
-    
+
     Args:
         text (str): The input text
     """
@@ -74,7 +98,7 @@ def removeHtMentionsSuccessions(text: str) -> Tuple[str, Dict[str, Optional[str]
     return text, ht_mts
 
 
-def tolower(text: str) -> str:
+def toLower(text: str) -> str:
     """_summary_
 
     Args:
@@ -97,21 +121,24 @@ def tolower(text: str) -> str:
     return text.lower()
 
 
-def replaceAtUser(text: str) -> Tuple[str, Dict[str, List[str]]]:
+def replaceAtUser(text: str,
+                  placeholder="atUser",
+                  use_placeholder=False) -> Tuple[str, Dict[str, List[str]]]:
     """Replaces "@user" with "atUser"
-    
+
     Args:
         text (str): The input text
     """
     users = re.findall(r"@[\w+" + UNICODES + "]+", text)
     for user in users:
-        text = text.replace(user, "atUser")
+        text = (text.replace(user, placeholder)
+                if use_placeholder else text.replace(user, ""))
     return text, {"users": users}
 
 
 def removeHashtagInFrontOfWord(text: str) -> Tuple[str, Dict[str, List[str]]]:
     """Removes hastag in front of a word
-    
+
     Args:
         text (str): The input text
     """
@@ -123,7 +150,7 @@ def removeHashtagInFrontOfWord(text: str) -> Tuple[str, Dict[str, List[str]]]:
 
 def replaceMultiExclamationMark(text: str) -> Tuple[str, Dict[str, int]]:
     """Replaces repetitions of exlamation marks
-    
+
     Args:
         text (str): The input text
     """
@@ -134,7 +161,7 @@ def replaceMultiExclamationMark(text: str) -> Tuple[str, Dict[str, int]]:
 
 def replaceMultiQuestionMark(text: str) -> Tuple[str, Dict[str, int]]:
     """Replaces repetitions of question marks
-    
+
     Args:
         text (str): The input text
     """
@@ -145,7 +172,7 @@ def replaceMultiQuestionMark(text: str) -> Tuple[str, Dict[str, int]]:
 
 def replaceMultiStopMark(text: str) -> Tuple[str, Dict[str, int]]:
     """Replaces repetitions of stop marks
-    
+
     Args:
         text (str): The input text
     """
@@ -295,7 +322,7 @@ def removePunctuation(text: str) -> Tuple[str, Dict[str, List[str]]]:
 
     Args:
         text (str)
-    
+
     Input:
        ""
     Output:
