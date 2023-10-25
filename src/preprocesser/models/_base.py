@@ -2,6 +2,7 @@ import re
 import string
 from typing import Tuple, List, Dict, Counter, Optional
 from collections import Counter
+import unicodedata
 
 from preprocesser.data import make_stopwords
 
@@ -9,6 +10,24 @@ UNICODES = (
     "\u0E00-\u0E7F\u0621-\u064A\u0660-\u0669\u0980-\u09FF"
     "\u0D80-\u0DFF\uA8E0–\uA8FF\u0900–\u097F\u1CD0–\u1CFF"
 )
+
+
+def removeNonAlphChar(text: str) -> str:
+    """Removes non alpha charaters from the text
+
+    Args:
+        text (_type_)
+
+    Returns:
+        str:
+    """
+    cleaned_text = ""
+    for character in text:
+        cleaned_text += (character
+                         if unicodedata.category(character)[0]
+                         in "LZNM" else " ")
+    clean_spaces = " ".join(cleaned_text.split())
+    return clean_spaces
 
 
 def removeTags(text: str,
