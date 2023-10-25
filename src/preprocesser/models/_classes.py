@@ -15,7 +15,8 @@ from . import (removeEmojis,
                removePunctuation,
                removeMultiWhiteSpace,
                toLower,
-               removeTags)
+               removeTags,
+               removeNonAlphChar)
 
 
 class PreProcesser:
@@ -37,6 +38,7 @@ class PreProcesser:
                  remove_multi_white_space=True,
                  punctuation=False,
                  use_placeholder=False,
+                 remove_non_alph_char=False
                  ):
 
         self.remove_multiple_white_space = remove_multi_white_space
@@ -55,6 +57,7 @@ class PreProcesser:
         self.replace_at_user = replace_at_user
         self.punctuation = punctuation
         self.use_placeholder = use_placeholder
+        self.remove_non_alph_char = remove_non_alph_char
 
     def __call__(self, text) -> Dict[str, Any]:
         """
@@ -112,6 +115,9 @@ class PreProcesser:
 
         if self.remove_multiple_white_space:
             text = removeMultiWhiteSpace(text)
+
+        if self.remove_non_alph_char:
+            text = removeNonAlphChar(text)
 
         features = {
             **features,

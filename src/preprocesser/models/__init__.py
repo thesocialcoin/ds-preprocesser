@@ -13,7 +13,8 @@ from ._base import (removeEmojis,
                     removePunctuation,
                     removeMultiWhiteSpace,
                     toLower,
-                    removeTags)
+                    removeTags,
+                    removeNonAlphChar)
 
 from ._classes import (PreProcesser,
                        EN_PreProcesser,
@@ -38,6 +39,7 @@ __all__ = ["removeEmojis",
            "removeMultiWhiteSpace",
            "toLower",
            "removeTags",
+           "removeNonAlphChar",
 
            "PreProcesser",
            "EN_PreProcesser",
