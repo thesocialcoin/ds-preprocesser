@@ -12,7 +12,15 @@ UNICODES = (
 )
 
 
-def removeNonAlphChar(text):
+def removeNonAlphChar(text: str) -> str:
+    """Removes non alpha charaters from the text
+
+    Args:
+        text (_type_)
+
+    Returns:
+        str:
+    """
     cleaned_text = ""
     for character in text:
         cleaned_text += (character
