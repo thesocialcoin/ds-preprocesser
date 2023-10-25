@@ -218,7 +218,8 @@ def replaceElongated(text: str) -> Tuple[str, Dict[str, int]]:
     return text, {"elongateds": len(elongateds)}
 
 
-def removeEmojis(text: str) -> Tuple[str, Dict[str, List[str]]]:
+def removeEmojis(text: str, placeholder="EMOJI",
+                 use_placeholder=True) -> Tuple[str, Dict[str, List[str]]]:
     """
     Replaces emojis in the input text with a placeholder
 
@@ -249,7 +250,10 @@ def removeEmojis(text: str) -> Tuple[str, Dict[str, List[str]]]:
 
     emojis = emoji_pattern.findall(text)
     for emoji in emojis:
-        text = text.replace(emoji, " EMOJI ")
+        text = (text.replace(emoji, placeholder)
+                if use_placeholder else text.replace(emoji, ""))
+    #for emoji in emojis:
+    #    text = text.replace(emoji, " EMOJI ")
     return text, {"emojis": emojis}
 
 
