@@ -61,7 +61,7 @@ def parallel_preprocessing(p: PreProcesser,
 
     if verbose:
         logger.info("Total records of the dataset - {}".format(len(text_set)))
-        logger.info("Number of jobs: {}".format(njobs))
+        logger.info("Number of jobs: {}".format(processes))
         logger.info("Time consuming in parallel: " +
                     "{0:.2f}s".format(round(t2-t1, 2)))
     return df['text'].values
