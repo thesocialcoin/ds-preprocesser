@@ -257,42 +257,45 @@ def removeEmojis(text: str, placeholder="EMOJI",
     return text, {"emojis": emojis}
 
 
-def removeNumbers(text: str) -> Tuple[str, Dict[str, List[str]]]:
+def removeNumbers(text: str,
+                  use_placeholder=False) -> Tuple[str, Dict[str, List[str]]]:
     """
-    Replaces numbers (dates, prices, years and other numbers) in the input text with placeholders.
+    Replaces numbers (dates, prices, years and other numbers) in the input
+    text with placeholders.
 
     Args:
         text (str): The input text.
+        use_placeholder (bool): Set identifiers otherwise uses empty string
 
     Returns:
         tuple: A tuple containing two elements:
             - str: The modified text with placeholders instead of numbers.
-            - dict: A dictionary with keys "dates," "years," "prices," and "other" mapping to lists of
+            - dict: A dictionary with keys "dates," "years," "prices," and
+            "other" mapping to lists of
               corresponding patterns found in the text.
     """
 
-    dates = re.findall(
-        r"""(?:[\d]{1,2}[/-][\d]{1,2}[/-]
-        (?:[\d]{4}|[\d]{2})|[\d]{1,2} [a-zA-Z]{3,} [\d]{4})""",
-        text,
-    )
+    pattern = r'\d{1,4}[-/ ]\d{1,4}[-/ ]\d{2,4}|(?:\d{1,2}[-/ ])?(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[-/ ]\d{1,4}'
+
+    dates = re.findall(pattern, text, re.IGNORECASE)
+
     for date in dates:
-        text = text.replace(date, "DATEMENTION")
+        text = text.replace(date, "DATEMENTION" if use_placeholder else "")
     prices = re.findall(
         r"""(?:[$€¥£₩]\s*(?:\d+[\. ,])?\d+(?:[, \.]\d+)?
         |(?:\d+[\. ,])?\d+(?:[, \.]\d+)?\s*[$€¥£₩])""",
         text,
     )
     for price in prices:
-        text = text.replace(price, "PRICEMENTION")
+        text = text.replace(price, "PRICEMENTION" if use_placeholder else "")
     years = re.findall(r"[\d]{4}", text)
 
     for year in years:
-        text = text.replace(year, "YYYY")
+        text = text.replace(year, "YYYY" if use_placeholder else "")
 
     numbers = re.findall(r"\b\d+\b", text)
     for number in numbers:
-        text = text.replace(number, "NUM")
+        text = text.replace(number, "NUM" if use_placeholder else "")
 
     return text, {
         "dates": dates,

@@ -107,7 +107,8 @@ class PreProcesser:
 
         text, emojis = removeEmojis(text) if self.remove_emojis else (text, {})
 
-        text, numbers = (removeNumbers(text)
+        text, numbers = (removeNumbers(text,
+                                       use_placeholder=self.use_placeholder)
                          if self.remove_numbers else (text, {}))
 
         text, punctuation = (removePunctuation(text)
