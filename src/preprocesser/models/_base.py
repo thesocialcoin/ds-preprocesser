@@ -209,7 +209,7 @@ def replaceElongated(text: str) -> Tuple[str, Dict[str, int]]:
         text (str): The input text
     """
     quantifiers = '{2,}'
-    pattern = fr"([a-zA-Z{UNICODES}]+)\1{quantifiers}"
+    pattern = fr"([a-zA-Z{UNICODES}])\1{quantifiers}"
 
     elongateds = re.findall(pattern, text)
     for _ in elongateds:
