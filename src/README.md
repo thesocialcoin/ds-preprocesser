@@ -26,6 +26,55 @@ pip install preprocesser
 
 The documentation includes more detailed [installation instructions](https://www.notion.so/citibeats/AWS-CodeArtifact-Tutorial-533ca93698ec4a1aa53e3f8d3830b075?pvs=4)
 
+## Example of use
+
+```python
+>>> from preprocesser.models import PreProcesser
+
+>>> p = PreProcesser()
+>>> text = """Hola Como
+
+va mi pana @user
+
+Que tal"""
+
+>>> text
+
+'Hola Como\n\nva mi pana @user\n\nQue tal'
+
+>>> p(text)
+
+{'raw_text': 'Hola Como\n\nva mi pana @user\n\nQue tal',
+ 'urls': [],
+ 'successions': {'begin': None, 'end': None},
+ 'users': ['@user'],
+ 'tags': [],
+ '#s': [],
+ 'emojis': [],
+ 'exclams': 0,
+ 'questions': 0,
+ 'stops': 0,
+ 'elongateds': 0,
+ 'numbers': {'dates': [], 'years': [], 'prices': [], 'other': []},
+ 'text': 'hola como va mi pana que tal'}
+
+>>> p.preprocess(text)
+
+{'raw_text': 'Hola Como\n\nva mi pana @user\n\nQue tal',
+ 'urls': [],
+ 'successions': {'begin': None, 'end': None},
+ 'users': ['@user'],
+ 'tags': [],
+ '#s': [],
+ 'emojis': [],
+ 'exclams': 0,
+ 'questions': 0,
+ 'stops': 0,
+ 'elongateds': 0,
+ 'numbers': {'dates': [], 'years': [], 'prices': [], 'other': []},
+ 'text': 'hola como va mi pana que tal'}
+``````
+
 ## Important links
 
 - Official source code repo: https://github.com/thesocialcoin/ds-preprocesser

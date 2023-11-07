@@ -141,6 +141,9 @@ class PreProcesser:
 
         return features
 
+    def preprocess(self, text: str) -> Dict[str, Any]:
+        return self.__call__(text)
+
 
 class EN_PreProcesser(PreProcesser):
     """English preprocessor"""
