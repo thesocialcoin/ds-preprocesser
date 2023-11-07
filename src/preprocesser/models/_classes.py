@@ -105,7 +105,9 @@ class PreProcesser:
         text, elongated = (replaceElongated(text)
                            if self.remove_elongated else (text, 0))
 
-        text, emojis = removeEmojis(text) if self.remove_emojis else (text, {})
+        text, emojis = (removeEmojis(text,
+                                       use_placeholder=self.use_placeholder)
+                        if self.remove_emojis else (text, {}))
 
         text, numbers = (removeNumbers(text,
                                        use_placeholder=self.use_placeholder)
