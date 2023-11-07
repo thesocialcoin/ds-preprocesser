@@ -1,105 +1,100 @@
 import unittest
 from preprocesser.models import _base
 
-#import emoji
 
 class TestPreProcesser(unittest.TestCase):
-    
-    #def test_removeEmojis(self):
 
-        #output_text = _base.removeEmojis(emoji.emojize('bon dia :sparkling_heart::sparkles:', use_palceholder=False))
-        #self.assertEqual(output_text, 'bon dia')
-    
     def test_removeHashtagInFrontOfWord(self):
+        text = 'some random text with #whitebear'
+        expected_text = 'some random text with whitebear'
+        output_text, _ = _base.removeHashtagInFrontOfWord(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.removeHashtagInFrontOfWord('some random text with #whitebear')
-        self.assertEqual(output_text[0], 'some random text with whitebear')
-    
     def test_removeHtMentionsSuccessions(self):
+        text = 'some random text with @nlozano @odelgado @mribera #whitebear'
+        expected_text = 'some random text with'
+        output_text, _ = _base.removeHtMentionsSuccessions(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.removeHtMentionsSuccessions('some random text with @nlozano @odelgado @mribera #whitebear')
-        self.assertEqual(output_text[0], 'some random text with')
-    
     def test_removeNumbers(self):
-
-        output_text = _base.removeNumbers('2023', use_placeholder=False)
-        self.assertEqual(output_text[0], '')
-
+        text = '2023'
+        expected_text = ''
+        output_text, _ = _base.removeNumbers(text, use_placeholder=False)
+        self.assertEqual(output_text, expected_text)
 
     def test_removeStopWords(self):
-
-        output_text = _base.removeStopWords('lo que tú digas', 'es')
+        text = 'lo que tú digas'
+        output_text = _base.removeStopWords(text, 'es')
         self.assertEqual(output_text[0], 'digas')
 
-    
     def test_removeUnicode(self):
+        text = 'what\n'
+        expected_text = 'what'
+        output_text = _base.removeUnicode(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.removeUnicode('what\n')
-        self.assertEqual(output_text, 'what')
-
-    
     def test_removeUrls(self):
+        text = 'some random text with https://random.url http://hello.com'
+        expected_text = 'some random text with'
+        output_text, _ = _base.removeUrls(text, use_placeholder=False)
+        self.assertEqual(output_text[0].strip(), expected_text)
 
-        output_text = _base.removeUrls('some random text with https://random.url http://hello.com', use_placeholder=False)
-        self.assertEqual(output_text[0].rstrip(), 'some random text with')
-
-    
     def test_replaceMultiStopMark(self):
-
-        output_text = _base.replaceMultiStopMark('...')
-        self.assertEqual(output_text[0], '.')
-
+        text = '...'
+        expected_text = '.'
+        output_text, _ = _base.replaceMultiStopMark(text)
+        self.assertEqual(output_text, expected_text)
 
     def test_replaceAtUser(self):
+        text = 'some random text with @nlozano @odelgado @mribera'
+        expected_text = 'some random text with'
+        output_text, _ = _base.replaceAtUser(text, use_placeholder=False)
+        self.assertEqual(output_text.strip(), expected_text)
 
-        output_text = _base.replaceAtUser('some random text with @nlozano @odelgado @mribera', use_placeholder=False)
-        self.assertEqual(output_text[0].rstrip(), 'some random text with')
-
-    
     def test_replaceElongated(self):
+        text = 'YEEEEEEESSS'
+        expected_text = 'YES'
+        output_text, _ = _base.replaceElongated(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.replaceElongated('YEEEEEEESSS')
-        self.assertEqual(output_text[0], 'YES')
-
-    
     def test_replaceMultiExclamationMark(self):
-
-        output_text = _base.replaceMultiExclamationMark('!!!')
-        self.assertEqual(output_text[0], '!')
-
+        text = '!!!'
+        expected_text = '!'
+        output_text, _ = _base.replaceMultiExclamationMark(text)
+        self.assertEqual(output_text, expected_text)
 
     def test_replaceMultiQuestionMark(self):
+        text = '???'
+        expected_text = '?'
+        output_text, _ = _base.replaceMultiQuestionMark(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.replaceMultiQuestionMark('???')
-        self.assertEqual(output_text[0], '?')
-
-    
     def test_removePunctuation(self):
+        text = 'have a good night!'
+        expected_text = 'have a good night '
+        output_text,  = _base.removePunctuation(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.removePunctuation('have a good night!')
-        self.assertEqual(output_text[0], 'have a good night ')
-
-    
     def test_removeMultiWhiteSpace(self):
+        text = 'what     '
+        expected_text = 'what '
+        output_text = _base.removeMultiWhiteSpace(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.removeMultiWhiteSpace('what     ')
-        self.assertEqual(output_text, 'what ')
-
-    
     def test_toLower(self):
+        text = 'YES'
+        expected_text = 'yes'
+        output_text = _base.toLower(text)
+        self.assertEqual(output_text, expected_text)
 
-        output_text = _base.toLower('YES')
-        self.assertEqual(output_text, 'yes')
-
-    
     def test_removeTags(self):
+        text = 'some random text with #whitebear'
+        expected_text = 'some random text with'
+        output_text, _ = _base.removeTags(text, use_placeholder=False)
+        self.assertEqual(output_text[0].strip(), expected_text)
 
-        output_text = _base.removeTags('some random text with #whitebear', use_placeholder=False)
-        self.assertEqual(output_text[0].rstrip(), 'some random text with')
-
-    
     def test_removeNonAlphChar(self):
-
-        output_text = _base.removeNonAlphChar('_night_')
-        self.assertEqual(output_text, 'night')
-
+        text = '_night_'
+        expected_text = 'night'
+        output_text = _base.removeNonAlphChar(text)
+        self.assertEqual(output_text, expected_text)
